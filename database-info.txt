@@ -1,0 +1,11 @@
+https://sometraffic.com/0000003?fbclid=IwAR123IAc6Ay4LsH0qQoLsvaag_CnoWZ-FqUIwThQRR6QXYsexFGnn8Ows30
+
+http://localhost:3000/0000002?fbclid=IwAR123IAc6Ay4LsH0qQoLsvaag_CnoWZ-FqUIwThQRR6QXYsexFGnn8Ows30
+
+
+
+npx sequelize-cli migration:create --name modify_users_add_new_fields
+npx sequelize-cli db:migrate
+
+
+
