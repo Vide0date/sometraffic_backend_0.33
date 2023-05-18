@@ -21,6 +21,9 @@ Users_Account.init(
       type: DataTypes.ENUM("Administrator", "Moderator", "User"),
       defaultValue: "User",
     },
+    AccountId: {
+      type: DataTypes.INTEGER,
+    },
   },
   {
     sequelize: dbc,

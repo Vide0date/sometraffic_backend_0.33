@@ -28,5 +28,7 @@ db.category_items = require("./category_item.js");
 db.information_items = require("./information_item.js");
 db.tasks = require("./task.js");
 db.users_groups = require("./users_group.js");
+db.accounts = require("./account.js")
+db.projects = require("./project.js")
 
 module.exports = db;

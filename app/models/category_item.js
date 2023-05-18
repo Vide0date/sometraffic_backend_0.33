@@ -1,6 +1,5 @@
 const { Model, Sequelize, DataTypes } = require('sequelize');
 const dbc = require('./db.js');
-const Users_Group = require("./users_group.js");
 
 class Category_Item extends Model { };
 
@@ -26,13 +25,4 @@ Category_Item.init({
 });
 
 // make association
-Users_Group.hasMany(Category_Item, {
-	foreignKey: "cat_group",
-	onDelete: "CASCADE",
-	onUpdate: "CASCADE",
-  });
-Category_Item.belongsTo(Users_Group, {
-	foreignKey: "cat_group",
-});
-
 module.exports = Category_Item;

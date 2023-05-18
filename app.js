@@ -79,6 +79,8 @@ app.get("/api/files/:file", (req, res) => {
 });
 
 require("./app/routes/auth.routes")(app);
+require("./app/routes/account.routes")(app);
+require("./app/routes/project.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/adminemailsetting.routes")(app);
 require("./app/routes/trackingurl.routes")(app);

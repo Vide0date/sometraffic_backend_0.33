@@ -11,22 +11,12 @@ exports.findAll = (req, res) => {
     where: {},
   };
 
-  const user_id = req.query.userid;
-  const item_id = req.query.itemid;
-  const status = req.query.status;
+  const ProjectId = req.query.ProjectId;
   const limit = req.query.limit;
 
-  if (status) {
-    // where.status = status;
-    Object.assign(where, { status });
-  }
-  if (user_id) {
+  if (ProjectId) {
     // conditions.where.category_item_id = parseInt(item_id);
-    Object.assign(where, { user_id: parseInt(user_id) });
-  }
-  if (item_id) {
-    // conditions.where.category_item_id = parseInt(item_id);
-    Object.assign(where, { category_item_id: parseInt(item_id) });
+    Object.assign(where, { ProjectId: parseInt(ProjectId) });
   }
   conditions.where = where;
 
@@ -48,7 +38,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  if (!req.body.user_id || !req.body.name) {
+  if (!req.body.ProjectId || !req.body.name) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
@@ -100,14 +90,14 @@ exports.findByTaskId = (req, res) => {
 
 exports.update = (req, res) => {
   const id = req.params.id;
-  if (!req.body.user_id || !req.body.name) {
+  if (!req.body.ProjectId || !req.body.name) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
     return;
   }
 
-  Groups.update(req.body, { where: { id } })
+  Groups.update(req.body, { where: { unique_identifier: id }})
     .then((num) => {
       if (num == 1) {
         res.send({
@@ -164,3 +154,63 @@ exports.delete = (req, res) => {
       });
     });
 };
+
+exports.getTrackingURl = (req, res) => {
+  Groups.findAll({
+    limit: 1,
+    order: [["createdAt", "DESC"]],
+  })
+    .then(async (entries) => {
+      let newTrURL = process.env.BASE_TRACKING_URL;
+      if (entries.length > 0) {
+        let identifier = entries[0].unique_identifier;
+        newTrURL = await createTrackingURL(identifier);
+      }
+      res.send({ newTrackingURl: newTrURL });
+    })
+    .catch((err) => {
+      console.log("Error: ", err);
+      res.status(500).send({
+        message: "Error creating tracking URL",
+      });
+    });
+}; 
+
+exports.findByUniqueIdentifier = (req, res) => {
+  const id = req.params.id;
+  Groups.findOne({
+    where: { unique_identifier: id },
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Error retrieving project item with id=" + id,
+      });
+    });
+};
+
+
+async function createTrackingURL(code) {
+  let currentCode = code.split(""); // Convert code to an array
+  for (let j = currentCode.length - 1; j >= 0; j--) {
+    // Loop through each digit from right to left
+    if (currentCode[j] === "9") {
+      // If digit is 9, change to a
+      currentCode[j] = "a";
+      break; // Move on to next digit
+    } else if (currentCode[j] === "z") {
+      // If digit is z, change to 0 and carry over to next digit
+      currentCode[j] = "0";
+    } else {
+      // Otherwise, increment the digit and stop
+      currentCode[j] = String.fromCharCode(currentCode[j].charCodeAt(0) + 1);
+      break;
+    }
+  }
+  code = currentCode.join(""); // Convert code back to a string
+  // console.log('------- code ------ ', code); // Output the code
+
+  return code;
+}

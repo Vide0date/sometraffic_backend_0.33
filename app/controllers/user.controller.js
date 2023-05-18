@@ -9,7 +9,7 @@ exports.create = (req, res) => {
   // Validate request
   console.log("---- REQ indide create -----", req.body);
   const body = req.body;
-  if (!(body.email && body.password && body.userName)) {
+  if (!(body.email && body.password && body.userName && body.AccountId)) {
     res.status(400).send({
       message: "You Carefully fill the Rigistration Form!",
     });
@@ -25,8 +25,9 @@ exports.create = (req, res) => {
         password: hash,
         email: body.email,
         userType: body.userType,
+        AccountId: body.AccountId,
       };
-      console.log("---- REQ indide create bcrypt -----", req.body);
+      console.log("---- REQ indide create bcrypt -----", user);
       // Save User_Account in the database
       User_Account.create(user)
         .then((data) => {
@@ -62,23 +63,24 @@ exports.update = (req, res) => {
           password: hash,
           email: body.email,
           userType: body.userType,
+          AccountId: body.AccountId
         };
         console.log("USER.UPDATE: ", user);
         User_Account.update(user, {
           where: { id: id },
         })
-          .then((num) => {
-            if (num == 1) {
-              res.send({
-                title: "Success!",
-                message: "USER was updated successfully.",
-              });
-            } else {
-              res.send({
-                title: "Error!",
-                message: `Cannot update User_Account with id=${id}. Maybe User_Account was not found or req.body is empty!`,
-              });
-            }
+        .then((num) => {
+          if (num == 1) {
+            res.send({
+              title: "Success!",
+              message: "USER was updated successfully.",
+            });
+          } else {
+            res.send({
+              title: "Error!",
+              message: `Cannot update User_Account with id=${id}. Maybe User_Account was not found or req.body is empty!`,
+            });
+          }
           })
           .catch((err) => {
             res.status(500).send({
@@ -86,15 +88,16 @@ exports.update = (req, res) => {
               message: "Error updating User_Account with id=" + id,
             });
           });
+        });
       });
-    });
-  } else {
-    console.log("inside else ");
-    var user = {
-      userName: body.userName,
-      email: body.email,
-      userType: body.userType,
-    };
+    } else {
+      console.log("inside else ");
+      var user = {
+        userName: body.userName,
+        email: body.email,
+        userType: body.userType,
+        AccountId: body.AccountId
+      };
 
     User_Account.update(user, {
       where: { id: id },

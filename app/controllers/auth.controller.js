@@ -74,7 +74,8 @@ exports.signin = (req, res) => {
             userName: user.userName,
             email: user.email,
             userType: user.userType,
-            accessToken: token
+            accessToken: token,
+            AccountId: user.AccountId
         });
     }).catch(err => {
         res.status(500).send({ message: err.message });

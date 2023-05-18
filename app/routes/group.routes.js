@@ -13,6 +13,10 @@ module.exports = function (app) {
 
   app.get("/api/groups/delete/:id", Group.delete);
 
+  app.get('/api/groups/identifier/:id', Group.findByUniqueIdentifier);
+
+  app.get("/api/groups/gettrackingurl", Group.getTrackingURl);
+
   app.get('/api/groups/:id', Group.findOne);
 
   app.post("/api/groups/create", Group.create);
