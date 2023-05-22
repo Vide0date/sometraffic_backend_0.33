@@ -89,6 +89,7 @@ require("./app/routes/categoryitem.routes")(app);
 require("./app/routes/informationitem.routes")(app);
 require("./app/routes/task.routes")(app);
 require("./app/routes/group.routes")(app);
+require("./app/routes/joinedgroup.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 1212;

@@ -30,5 +30,6 @@ db.tasks = require("./task.js");
 db.users_groups = require("./users_group.js");
 db.accounts = require("./account.js")
 db.projects = require("./project.js")
+db.joined_groups = require("./joined-groups.js")
 
 module.exports = db;
