@@ -56,7 +56,6 @@ Account.sync({ alter: true }).then(() => {
       })
       Users_Group.sync({ alter: true }).then(() => {
         Users_Group.hasMany(Category_Item, {
-          foreignKey: "cat_group",
           onDelete: "CASCADE",
           onUpdate: "CASCADE",
         })

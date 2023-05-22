@@ -8,7 +8,7 @@ Users_Group.init(
   {
     ProjectId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      // allowNull: false,
     },
     unique_identifier: {
       type: DataTypes.STRING(100),
