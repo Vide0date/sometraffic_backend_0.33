@@ -34,7 +34,9 @@ exports.findAll = (req, res) => {
     conditions.limit = parseInt(limit);
   }
   console.log("Conditions joined_ roups: ", conditions);
-  const TODAY_START = new Date().setHours(0, 0, 0, 0);
+
+  let date = new Date();
+  const TODAY_START = new Date().setTime(date.getTime() - (24 * 60 * 60 * 1000));
   const NOW = new Date();
   Joined_Group.findAll({
     where: {
