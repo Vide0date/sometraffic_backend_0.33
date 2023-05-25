@@ -10,29 +10,50 @@ exports.findAll = (req, res) => {
   let conditions = {}
   const url = req.query.url;
   const limit = req.query.limit;
-
+  const projectId = req.query.projectId;
   if (url) {
     conditions.url_1_link = url;
   }
   if (limit) {
     conditions.limit = limit;
   }
+  
   console.log("Conditions: ", conditions);
+  let groupConditions = {
+    // include: Category_Item,
+    order: [["createdAt", "ASC"]],
+    where: {},
+  };
+  let where = {};
+  Object.assign(where, { ProjectId: parseInt(projectId) });
+  groupConditions.where = where;
 
-  Category_Item.findAll({
-    include: Users_Groups,
-    where: conditions,
-    order: [["createdAt", "DESC"]],
-  })
+  Users_Groups.findAll(groupConditions)
     .then((data) => {
-      res.send(data);
+      console.log('groups');
+      const groupIds = data.map(group => group.id)
+      console.log(groupIds);
+      conditions.cat_group = groupIds
+      Category_Item.findAll({
+        include: Users_Groups,
+        where: conditions,
+        order: [["createdAt", "DESC"]],
+      })
+        .then((data) => {
+          res.send(data);
+        })
+        .catch((err) => {
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving category items.",
+          });
+        });
     })
     .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving category items.",
-      });
+      console.log("err: ", err);      
     });
+
+  
 };
 
 exports.getTrackingURl = (req, res) => {

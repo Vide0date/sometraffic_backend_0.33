@@ -31,26 +31,6 @@ Users_Group.init(
 );
 
 // define association here
-// Project.hasMany(Users_Group, {
-//   // foreignKey: "user_id",
-//   onDelete: "CASCADE",
-//   onUpdate: "CASCADE",
-// });
-// Users_Group.belongsTo(Project, {
-//   // foreignKey: "user_id",
-// });
-// Users_Group.sync({alter: true}).then(() => {
-//   Users_Group.hasMany(Category_Item, {
-//     foreignKey: "cat_group",
-//     onDelete: "CASCADE",
-//     onUpdate: "CASCADE",
-//     });
-//   Category_Item.belongsTo(Users_Group, {
-//     foreignKey: "cat_group",
-//   });
-    
-//   Category_Item.sync({alter: true})
-  
-// })
+
 
 module.exports = Users_Group;

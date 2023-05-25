@@ -32,10 +32,11 @@ Account.init(
 Account.hasOne(Users_Account)
 Users_Account.belongsTo(Account)
 
-Account.sync({ alter: true }).then(() => {
+// uncomment to sync database to model
+Account.sync().then(() => {
   console.log("Account Table created/altered successfully!")
-
-  Users_Account.sync({ alter: true }).then(() => {
+  // add { alter: true } when syncing to database
+  Users_Account.sync().then(() => {
     console.log("Users Account Table created/altered successfully!")
     Account.hasMany(Project, {
       onDelete: "CASCADE",
@@ -43,7 +44,7 @@ Account.sync({ alter: true }).then(() => {
     })
     Project.belongsTo(Account)
 
-    Project.sync({ alter: true }).then(() => {
+    Project.sync().then(() => {
       console.log("project table altered/created successfully")
       // define association here
       Project.hasMany(Users_Group, {
@@ -54,7 +55,7 @@ Account.sync({ alter: true }).then(() => {
       Users_Group.belongsTo(Project, {
         // foreignKey: "user_id",
       })
-      Users_Group.sync({ alter: true }).then(() => {
+      Users_Group.sync().then(() => {
         Users_Group.hasMany(Category_Item, {
           onDelete: "CASCADE",
           onUpdate: "CASCADE",
@@ -63,7 +64,7 @@ Account.sync({ alter: true }).then(() => {
           foreignKey: "cat_group",
         })
 
-        Category_Item.sync({ alter: true })
+        Category_Item.sync()
       })
     })
   })

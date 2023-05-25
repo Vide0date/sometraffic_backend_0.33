@@ -12,6 +12,6 @@ Joined_Group.init(
     modelName: "Joined_Group",
   }
 );
-
-Joined_Group.sync({alter: true})
+// uncomment to sync database to model
+// Joined_Group.sync({alter: true})
 module.exports = Joined_Group;
