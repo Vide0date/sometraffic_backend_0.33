@@ -5,12 +5,14 @@ const Category_Item = db.category_items;
 const Information_Item = db.information_items;
 const Task = db.tasks;
 const Users_Groups = db.users_groups;
+const Projects = db.projects;
 
 exports.findAll = (req, res) => {
   let conditions = {}
   const url = req.query.url;
   const limit = req.query.limit;
-  const projectId = req.query.projectId;
+  const accountId = req.query.accountId;
+
   if (url) {
     conditions.url_1_link = url;
   }
@@ -25,7 +27,17 @@ exports.findAll = (req, res) => {
     where: {},
   };
   let where = {};
-  Object.assign(where, { ProjectId: parseInt(projectId) });
+  
+  Projects.findAll({
+    where: {
+      AccountId: accountId
+    }
+  }).then((data) => {
+    console.log('projects');
+    const projectIds = data.map(project => project.id)
+    console.log(projectIds);
+
+  Object.assign(where, { ProjectId: projectIds });
   groupConditions.where = where;
 
   Users_Groups.findAll(groupConditions)
@@ -52,7 +64,9 @@ exports.findAll = (req, res) => {
     .catch((err) => {
       console.log("err: ", err);      
     });
-
+  }).catch((err) => {
+    console.log("err: ", err);      
+  });
   
 };
 
