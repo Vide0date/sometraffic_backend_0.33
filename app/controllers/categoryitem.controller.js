@@ -84,7 +84,7 @@ exports.getTrackingURl = (req, res) => {
       res.send({ newTrackingURl: newTrURL });
     })
     .catch((err) => {
-      console.log("Error: ", error);
+      console.log("Error: ", err);
       res.status(500).send({
         message: "Error creating tracking URL",
       });
