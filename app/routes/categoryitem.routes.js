@@ -10,6 +10,8 @@ module.exports = function (app) {
   });
 
   app.get("/api/category-items/all", categoryitem.findAll);
+  
+  app.get("/api/category-items/allwithproject", categoryitem.findAllWithProject);
 
   app.get("/api/category-items/gettrackingurl", categoryitem.getTrackingURl);
 
