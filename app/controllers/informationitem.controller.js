@@ -3,6 +3,7 @@ const db = require("../models");
 
 const Information_Item = db.information_items;
 const Category_Item = db.category_items;
+const Users_Groups = db.users_groups;
 
 exports.findAll = async (req, res) => {
   let conditions = {
@@ -10,7 +11,7 @@ exports.findAll = async (req, res) => {
     order: [["createdAt", "DESC"]],
   };
 
-  const item_id = req.query.itemid;
+  const projectId = req.query.projectId;
   const url = req.query.url;
   const limit = req.query.limit;
 
@@ -19,30 +20,61 @@ exports.findAll = async (req, res) => {
       url_1_link: url,
     };
   }
-  if (item_id) {
-    conditions.where = {
-      category_item_id: parseInt(item_id),
-    };
-  }
 
   if (limit) {
     conditions.limit = parseInt(limit);
   }
   console.log("Conditions info item: ", conditions);
-
-  const count = await Information_Item.count(conditions);
-
-  Information_Item.findAll(conditions)
+  let groupConditions = {
+    // include: Category_Item,
+    order: [["createdAt", "ASC"]],
+    where: {},
+  };
+  let where = {};
+  Object.assign(where, { ProjectId: parseInt(projectId) });
+  groupConditions.where = where;
+  Users_Groups.findAll(groupConditions)
     .then((data) => {
-      res.send({ data, count });
+      console.log('groups');
+      const groupIds = data.map(group => group.id)
+      console.log(groupIds);
+      // catconditions.cat_group = groupIds
+      Category_Item.findAll({
+        include: Users_Groups,
+        where: {
+          cat_group : groupIds
+        },
+        order: [["createdAt", "DESC"]],
+      })
+        .then(async (data) => {
+          const catIds = data.map(cat => cat.id)
+          conditions.where = {
+            category_item_id: catIds,
+          };
+          const count = await Information_Item.count(conditions);
+
+        Information_Item.findAll(conditions)
+          .then((data) => {
+            res.send({ data, count });
+          })
+          .catch((err) => {
+            console.log("err: ", err);
+            res.status(500).send({
+              message:
+                err.message ||
+                "Some error occurred while retrieving information items.",
+            });
+          });
+        })
+        .catch((err) => {
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving category items.",
+          });
+        });
     })
     .catch((err) => {
-      console.log("err: ", err);
-      res.status(500).send({
-        message:
-          err.message ||
-          "Some error occurred while retrieving information items.",
-      });
+      console.log("err: ", err);      
     });
 };
 
