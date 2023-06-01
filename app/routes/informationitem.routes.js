@@ -10,6 +10,7 @@ module.exports = function (app) {
   });
 
   app.get("/api/information-items/all", Informationitem.findAll);
+  app.get("/api/information-items/allByItemId", Informationitem.findAllByItemId);
 
   // app.get('/api/information-items/:id', informationitem.findOne);
 

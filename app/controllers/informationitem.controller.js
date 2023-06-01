@@ -5,6 +5,49 @@ const Information_Item = db.information_items;
 const Category_Item = db.category_items;
 const Users_Groups = db.users_groups;
 
+exports.findAllByItemId = async (req, res) => {
+  let conditions = {
+    include: Category_Item,
+    order: [["createdAt", "DESC"]],
+  };
+
+  const item_id = req.query.itemid;
+  const url = req.query.url;
+  const limit = req.query.limit;
+
+  if (url) {
+    conditions.where = {
+      url_1_link: url,
+    };
+  }
+  if (item_id) {
+    conditions.where = {
+      category_item_id: parseInt(item_id),
+    };
+  }
+
+  if (limit) {
+    conditions.limit = parseInt(limit);
+  }
+  console.log("Conditions info item: ", conditions);
+
+  const count = await Information_Item.count(conditions);
+
+  Information_Item.findAll(conditions)
+    .then((data) => {
+      res.send({ data, count });
+    })
+    .catch((err) => {
+      console.log("err: ", err);
+      res.status(500).send({
+        message:
+          err.message ||
+          "Some error occurred while retrieving information items.",
+      });
+    });
+};
+
+
 exports.findAll = async (req, res) => {
   let conditions = {
     include: Category_Item,
