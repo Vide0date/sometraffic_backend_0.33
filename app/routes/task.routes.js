@@ -10,6 +10,7 @@ module.exports = function (app) {
   });
 
   app.get("/api/tasks/all", Task.findAll);
+  app.get("/api/tasks/allWithItemId", Task.findAllWithItemId);
 
   // app.get('/api/tasks/:id', Task.findOne);
 

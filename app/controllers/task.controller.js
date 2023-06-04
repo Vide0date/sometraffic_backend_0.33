@@ -5,6 +5,52 @@ const Task = db.tasks;
 const Category_Item = db.category_items;
 const Users_Groups = db.users_groups;
 
+exports.findAllWithItemId = async (req, res) => {
+  let where = {};
+  let conditions = {
+    include: Category_Item,
+    order: [["due_date_time", "ASC"]],
+    where: {},
+  };
+
+  const item_id = req.query.itemid;
+  const status = req.query.status;
+  const limit = req.query.limit;
+
+  if (status) {
+    // where.status = status;
+    Object.assign(where, { status });
+  }
+  if (item_id) {
+    // conditions.where.category_item_id = parseInt(item_id);
+    Object.assign(where, { category_item_id: parseInt(item_id) });
+  }else{
+    return this.findAll(req, res)
+  }
+  conditions.where = where;
+
+  if (limit) {
+    conditions.limit = parseInt(limit);
+  }
+  console.log("Conditions: ", conditions);
+
+  const count = await Task.count(conditions);
+  console.log("count: ", count);
+
+  Task.findAll(conditions)
+    .then((data) => {
+      res.send({
+        data,
+        count
+      });
+    })
+    .catch((err) => {
+      console.log("err: ", err);
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving tasks.",
+      });
+    });
+};
 
 exports.findAll = async (req, res) => {
   let conditions = {
